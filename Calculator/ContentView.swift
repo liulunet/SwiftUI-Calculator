@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var brain: CalculatorBrain = .left("0")
+    
     var body: some View {
         VStack(spacing: 12) {
             Spacer()
-            Text("0")
+            Text(brain.output)
                 .font(.system(size: 76))
                 .lineLimit(1)
                 .frame(
@@ -19,7 +22,7 @@ struct ContentView: View {
                     maxWidth: .infinity,
                     alignment: .trailing
                 )
-            CalculatorButtonPad()
+            CalculatorButtonPad(brain: $brain)
                 .padding(.bottom)
         }
         
@@ -39,6 +42,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct CalculatorButtonPad: View {
+    @Binding var brain: CalculatorBrain
     let pad: [[CalculatorButtonItem]] = [
         [.command(.clear), .command(.flip), .command(.percent), .op(.divide)],
         [.digit(7), .digit(8), .digit(9), .op(.multiply)],
@@ -49,18 +53,20 @@ struct CalculatorButtonPad: View {
     var body: some View {
         VStack(spacing: 8) {
             ForEach(pad, id: \.self) { row in
-                CalculatorButtonRow(row: row)
+                CalculatorButtonRow(brain: $brain, row: row)
             }
         }
     }
 }
 
 struct CalculatorButtonRow: View {
+    @Binding var brain: CalculatorBrain
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
             ForEach(row, id: \.self) { item in
                 CalcularotButton(title: item.title, size: item.size, backgroundColorName: item.backgroundColorName, textColorName: item.textColorName) {
+                    self.brain = self.brain.apply(item: item)
                     print("Button: \(item.title)")
                 }
             }

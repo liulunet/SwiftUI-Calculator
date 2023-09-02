@@ -40,7 +40,7 @@ extension CalculatorButtonItem {
     }
     
     var size: CGSize {
-        let size: CGFloat = (UIScreen.main.bounds.width-80)/4
+        let size: CGFloat = (UIScreen.main.bounds.width-40)/4
         if case .digit(let value) = self, value == 0 {
             return CGSize(width: size * 2 + 8, height: size)
         }
