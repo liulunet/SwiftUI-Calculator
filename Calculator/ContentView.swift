@@ -11,7 +11,8 @@ import Combine
 struct ContentView: View {
     
 //    @State private var brain: CalculatorBrain = .left("0")
-    @ObservedObject var model = CalculatorModel()
+//    @ObservedObject var model = CalculatorModel()
+    @EnvironmentObject var model: CalculatorModel
     @State private var editingHistory = false
     
     var body: some View {
@@ -31,7 +32,7 @@ struct ContentView: View {
                     maxWidth: .infinity,
                     alignment: .trailing
                 )
-            CalculatorButtonPad(model: model)
+            CalculatorButtonPad()
                 .padding(.bottom)
         }
         
@@ -42,16 +43,16 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ContentView()
-            ContentView().previewDevice("iPhone SE (3rd generation)")
-            ContentView().previewDevice("iPad Pro (12.9-inch) (6th generation)")
+            ContentView().environmentObject(CalculatorModel())
+            ContentView().previewDevice("iPhone SE (3rd generation)").environmentObject(CalculatorModel())
+            ContentView().previewDevice("iPad Pro (12.9-inch) (6th generation)").environmentObject(CalculatorModel())
         }
         
     }
 }
 
 struct CalculatorButtonPad: View {
-    var model: CalculatorModel
+//    var model: CalculatorModel
     let pad: [[CalculatorButtonItem]] = [
         [.command(.clear), .command(.flip), .command(.percent), .op(.divide)],
         [.digit(7), .digit(8), .digit(9), .op(.multiply)],
@@ -62,14 +63,15 @@ struct CalculatorButtonPad: View {
     var body: some View {
         VStack(spacing: 8) {
             ForEach(pad, id: \.self) { row in
-                CalculatorButtonRow(model: self.model, row: row)
+                CalculatorButtonRow(row: row)
             }
         }
     }
 }
 
 struct CalculatorButtonRow: View {
-    var model: CalculatorModel
+//    var model: CalculatorModel
+    @EnvironmentObject var model: CalculatorModel
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
