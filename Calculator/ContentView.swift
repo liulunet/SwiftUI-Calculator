@@ -6,15 +6,20 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ContentView: View {
     
-    @State private var brain: CalculatorBrain = .left("0")
+//    @State private var brain: CalculatorBrain = .left("0")
+    @ObservedObject var model = CalculatorModel()
     
     var body: some View {
         VStack(spacing: 12) {
             Spacer()
-            Text(brain.output)
+            Button("操作履历：\(model.history.count)") {
+                print(self.model.history)
+            }
+            Text(model.brain.output)
                 .font(.system(size: 76))
                 .lineLimit(1)
                 .frame(
@@ -22,7 +27,7 @@ struct ContentView: View {
                     maxWidth: .infinity,
                     alignment: .trailing
                 )
-            CalculatorButtonPad(brain: $brain)
+            CalculatorButtonPad(model: model)
                 .padding(.bottom)
         }
         
@@ -42,7 +47,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct CalculatorButtonPad: View {
-    @Binding var brain: CalculatorBrain
+    var model: CalculatorModel
     let pad: [[CalculatorButtonItem]] = [
         [.command(.clear), .command(.flip), .command(.percent), .op(.divide)],
         [.digit(7), .digit(8), .digit(9), .op(.multiply)],
@@ -53,20 +58,20 @@ struct CalculatorButtonPad: View {
     var body: some View {
         VStack(spacing: 8) {
             ForEach(pad, id: \.self) { row in
-                CalculatorButtonRow(brain: $brain, row: row)
+                CalculatorButtonRow(model: self.model, row: row)
             }
         }
     }
 }
 
 struct CalculatorButtonRow: View {
-    @Binding var brain: CalculatorBrain
+    var model: CalculatorModel
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
             ForEach(row, id: \.self) { item in
                 CalcularotButton(title: item.title, size: item.size, backgroundColorName: item.backgroundColorName, textColorName: item.textColorName) {
-                    self.brain = self.brain.apply(item: item)
+                    self.model.apply(item)
                     print("Button: \(item.title)")
                 }
             }
