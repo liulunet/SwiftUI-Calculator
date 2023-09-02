@@ -29,7 +29,12 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        Group {
+            ContentView()
+            ContentView().previewDevice("iPhone SE (3rd generation)")
+            ContentView().previewDevice("iPad Pro (12.9-inch) (6th generation)")
+        }
+        
     }
 }
 
@@ -55,7 +60,7 @@ struct CalculatorButtonRow: View {
     var body: some View {
         HStack {
             ForEach(row, id: \.self) { item in
-                CalcularotButton(title: item.title, size: item.size, backgroundColorName: item.backgroundColorName) {
+                CalcularotButton(title: item.title, size: item.size, backgroundColorName: item.backgroundColorName, textColorName: item.textColorName) {
                     print("Button: \(item.title)")
                 }
             }
@@ -69,13 +74,14 @@ struct CalcularotButton: View {
     let title: String
     let size: CGSize
     let backgroundColorName: String
+    let textColorName: String
     let action: () -> Void
     
     var body: some View {
         Button(action: action, label: {
             Text(title)
                 .font(.system(size: fontSize))
-                .foregroundColor(.white)
+                .foregroundColor(Color(textColorName))
                 .frame(width: size.width,height: size.height)
                 .background(Color(backgroundColorName))
                 .cornerRadius(size.width/2)

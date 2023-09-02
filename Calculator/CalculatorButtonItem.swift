@@ -40,10 +40,11 @@ extension CalculatorButtonItem {
     }
     
     var size: CGSize {
+        let size: CGFloat = (UIScreen.main.bounds.width-80)/4
         if case .digit(let value) = self, value == 0 {
-            return CGSize(width: 88 * 2 + 8, height: 88)
+            return CGSize(width: size * 2 + 8, height: size)
         }
-        return CGSize(width: 88, height: 88)
+        return CGSize(width: size, height: size)
     }
     
     var backgroundColorName: String {
@@ -51,6 +52,15 @@ extension CalculatorButtonItem {
         case .digit, .dot: return "digitBackground"
         case .op: return "operatorBackground"
         case .command: return "commandBackground"
+        }
+    }
+    
+    var textColorName: String {
+        switch self {
+        case .command: return "commandText"
+        case .digit(_): return "universalText"
+        case .dot: return "universalText"
+        case .op(_): return "universalText"
         }
     }
 }
